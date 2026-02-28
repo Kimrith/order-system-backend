@@ -18,12 +18,10 @@ export class AuthService {
 
     return {
       message: 'Admin list',
-      data: admins.map((a) => ({
-        ...a,
-        phone_number: a.phone_number.toString(), // ✅ FIX
-      })),
+      data: admins,
     };
   }
+
   async register(dto: CreateAuthDto) {
     try {
       const admin = await this.prisma.admin.create({
@@ -31,7 +29,7 @@ export class AuthService {
           name: dto.name,
           email: dto.email,
           password: dto.password,
-          phone_number: BigInt(dto.phone),
+          phone_number: dto.phone,
         },
       });
 
@@ -40,7 +38,7 @@ export class AuthService {
         data: {
           name: admin.name,
           email: admin.email,
-          phone: admin.phone_number.toString(), // ✅ FIX
+          phone: admin.phone_number,
         },
       };
     } catch (err) {

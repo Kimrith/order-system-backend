@@ -17,8 +17,10 @@ model Admin {
   id       Int    @id @default(autoincrement())
   email    String @unique
   name     String
-  phone_number    BigInt
+  phone_number    String
   password String
+
+  onlyOne  Boolean @unique @default(true)
 }
 
 model order {

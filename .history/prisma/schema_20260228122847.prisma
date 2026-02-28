@@ -14,11 +14,11 @@ datasource db {
 }
 
 model Admin {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  name     String
-  phone_number    BigInt
-  password String
+  id           Int    @id @default(autoincrement())
+  email        String @unique
+  name         String
+  phone_number String
+  password     String
 }
 
 model order {

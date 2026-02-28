@@ -1,29 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async getAdmins() {
-    const admins = await this.prisma.admin.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone_number: true,
-      },
-    });
-
+  adminGet() {
     return {
-      message: 'Admin list',
-      data: admins.map((a) => ({
-        ...a,
-        phone_number: a.phone_number.toString(), // ✅ FIX
-      })),
+      message: 'Admin checked',
     };
   }
+
   async register(dto: CreateAuthDto) {
     try {
       const admin = await this.prisma.admin.create({
@@ -31,7 +19,7 @@ export class AuthService {
           name: dto.name,
           email: dto.email,
           password: dto.password,
-          phone_number: BigInt(dto.phone),
+          phone_number: dto.phone,
         },
       });
 
@@ -40,7 +28,7 @@ export class AuthService {
         data: {
           name: admin.name,
           email: admin.email,
-          phone: admin.phone_number.toString(), // ✅ FIX
+          phone: admin.phone_number,
         },
       };
     } catch (err) {

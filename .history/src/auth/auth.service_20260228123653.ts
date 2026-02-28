@@ -5,7 +5,6 @@ import { PrismaService } from '../../prisma/prisma.service';
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService) {}
-
   async getAdmins() {
     const admins = await this.prisma.admin.findMany({
       select: {
