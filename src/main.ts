@@ -12,7 +12,14 @@ async function bootstrap() {
     .setTitle('My Order System API')
     .setDescription('NestJS Swagger API')
     .setVersion('1.0')
-    // .addTag('auth')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'access-token', // 👈 important
+    ) // .addTag('auth')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

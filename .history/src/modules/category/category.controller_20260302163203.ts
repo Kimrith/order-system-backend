@@ -17,12 +17,12 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Get('categoryGet')
+  @Get('category')
   getAll() {
     return this.categoryService.getAll();
   }
 
-  @Post('categoryPost')
+  @Post('category')
   create(@Body() dto: CreateCategoryDto) {
     return this.categoryService.create(dto);
   }
