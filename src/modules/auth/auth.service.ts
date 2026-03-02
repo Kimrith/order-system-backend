@@ -2,14 +2,20 @@ import {
   Injectable,
   BadRequestException,
   ConflictException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
 
   async getUsers() {
     const users = await this.prisma.user.findMany({
@@ -72,6 +78,39 @@ export class AuthService {
         email: user.email,
         phone: user.phone,
       },
+    };
+  }
+
+  async login(dto: LoginDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        role: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid email');
+    }
+
+    const isMatch = await bcrypt.compare(dto.password, user.password);
+
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    };
+
+    return {
+      message: 'Login success',
+      access_token: this.jwtService.sign(payload),
     };
   }
 }
