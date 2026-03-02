@@ -18,15 +18,14 @@ model User {
   fullname  String
   phone     String   @unique
   email     String   @unique
-  role      Role     @default(STAFF)
+  role      String
   password  String
   createdAt DateTime @default(now())
 }
 
 model Category {
-  id                  Int       @id @default(autoincrement())
-  name                String
-  description         String
+  id        Int       @id @default(autoincrement())
+  name      String
   createdAt DateTime  @default(now())
 
   products  Product[]
@@ -85,28 +84,26 @@ model PaymentDetail {
   external_transaction_id String
   currency                String
   confirmed_at            DateTime?
-  createdAt               DateTime @default(now())
 
   order Order @relation(fields: [order_id], references: [id])
-}
-
-enum Role {
-  ADMIN
-  STAFF
+  createdAt DateTime @default(now())
 }
 
 enum PaymentMethod {
   CASH
   KHQR
+  createdAt DateTime @default(now())
 }
 
 enum PaymentStatus {
   UNPAID
   PAID
+  createdAt DateTime @default(now())
 }
 
 enum CookStatus {
   NOT_YET_ACCEPTED
   ACCEPTED
   COMPLETED
+  createdAt DateTime @default(now())
 }

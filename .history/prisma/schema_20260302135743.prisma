@@ -18,15 +18,14 @@ model User {
   fullname  String
   phone     String   @unique
   email     String   @unique
-  role      Role     @default(STAFF)
+  role      String
   password  String
   createdAt DateTime @default(now())
 }
 
 model Category {
-  id                  Int       @id @default(autoincrement())
-  name                String
-  description         String
+  id        Int       @id @default(autoincrement())
+  name      String
   createdAt DateTime  @default(now())
 
   products  Product[]
