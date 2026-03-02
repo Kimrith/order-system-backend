@@ -19,6 +19,7 @@ model Admin {
   name     String
   phone_number    BigInt
   password String
+  confirm_password String?
 }
 
 model order {
