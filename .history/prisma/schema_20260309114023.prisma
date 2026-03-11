@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  fullname  String
+  phone     String   @unique
+  email     String   @unique
+  role      Role     @default(STAFF)
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id                  Int       @id @default(autoincrement())
+  name                String
+  description         String
+  createdAt DateTime  @default(now())
+
+  products  Product[]
+}
+
+model Product {
+  id           Int      @id @default(autoincrement())
+  category_id  Int
+  name         String
+  price        Decimal  @db.Decimal(10,2)
+  is_available Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  category   Category   @relation(fields: [category_id], references: [id])
+  orderItems OrderItem[]
+}
+
+model DiningTable {
+  id        Int      @id @default(autoincrement())
+  table_no  String
+  status    String
+  createdAt DateTime @default(now())
+
+  orders Order[]
+}
+
+model Order {
+  id             Int       @id @default(autoincrement())
+  table_id       Int
+  total_price    Decimal   @db.Decimal(10,2)
+  payment_method PaymentMethod
+  payment_status PaymentStatus
+  cook_status    CookStatus
+  createdAt      DateTime  @default(now())
+
+  table         DiningTable @relation(fields: [table_id], references: [id])
+  items         OrderItem[]
+  paymentDetail PaymentDetail?
+}
+
+model OrderItem {
+  id             Int      @id @default(autoincrement())
+  order_id       Int
+  product_id     Int
+  quantity       Int
+  price_at_order Decimal  @db.Decimal(10,2)
+  createdAt      DateTime @default(now())
+
+  order   Order   @relation(fields: [order_id], references: [id])
+  product Product @relation(fields: [product_id], references: [id])
+}
+
+model PaymentDetail {
+  id                      Int      @id @default(autoincrement())
+  order_id                Int      @unique
+  external_transaction_id String
+  currency                String
+  confirmed_at            DateTime?
+  createdAt               DateTime @default(now())
+
+  order Order @relation(fields: [order_id], references: [id])
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+enum PaymentMethod {
+  CASH
+  KHQR
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+}
+
+enum CookStatus {
+  NOT_YET_ACCEPTED
+  ACCEPTED
+  COMPLETED
+}
