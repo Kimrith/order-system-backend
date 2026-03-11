@@ -9,6 +9,7 @@ import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
+import { access } from 'fs';
 
 @Injectable()
 export class AuthService {
@@ -127,7 +128,7 @@ export class AuthService {
           email: payload.email,
           role: payload.role,
         },
-        { expiresIn: '15m' },
+        { expiresIn: '7d' },
       );
 
       return {

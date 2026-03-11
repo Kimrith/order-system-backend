@@ -8,8 +8,8 @@ export class PrismaService extends PrismaClient {
       datasources: {
         db: {
           url: 'postgresql://nestuser:nestpass@localhost:5432/order_system?schema=public',
-        },
-      },
-    });
+      }
+    })
   }
 }
+

@@ -9,6 +9,7 @@ import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
+import { access } from 'fs';
 
 @Injectable()
 export class AuthService {
@@ -108,15 +109,12 @@ export class AuthService {
       role: user.role,
     };
 
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-
     return {
       message: 'Login success',
-      access_token: accessToken,
-      refresh_token: refreshToken,
+      access_token: this.jwtService.sign(payload),
     };
   }
+
   async refreshToken(token: string) {
     try {
       const payload = this.jwtService.verify(token);
@@ -127,7 +125,7 @@ export class AuthService {
           email: payload.email,
           role: payload.role,
         },
-        { expiresIn: '15m' },
+        { expiresIn: '7d' },
       );
 
       return {
