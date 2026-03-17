@@ -5,7 +5,6 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { JwtGuard } from 'src/config/jwt.guard';
 import { LoginDto } from './dto/login.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { RefreshDto } from './dto/refresh.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -32,7 +31,7 @@ export class AuthController {
   }
 
   @Post('refresh')
-  refresh(@Body() dto: RefreshDto) {
-    return this.authService.refreshToken(dto.refresh_token);
+  refresh(@Body('refresh_token') dto: RefreshDto) {
+    return this.authService.refreshToken(token);
   }
 }
