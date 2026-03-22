@@ -9,7 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import jwtConfig from 'src/config/jwt.config';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from '../../config/jwt.strategy';
 
 @Module({
   imports: [
